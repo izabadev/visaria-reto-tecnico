@@ -60,5 +60,6 @@ export type TraceEntry = {
 
 export type Decision = {
   winner: { id: string; name: string } | null;
+  windowClosed: boolean; // true si han pasado más de 24 h desde lastUserMessageAt
   trace: TraceEntry[]; // un elemento por flujo, en el mismo orden en que se recibieron
 };

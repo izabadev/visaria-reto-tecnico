@@ -106,6 +106,23 @@ describe('decideFlow', () => {
   });
 
   it('devuelve winner null y trace vacío si no hay flujos', () => {
-    expect(decideFlow([], buildMessage(), [])).toEqual({ winner: null, trace: [] });
+    expect(decideFlow([], buildMessage(), [])).toEqual({
+      winner: null,
+      windowClosed: false,
+      trace: [],
+    });
+  });
+
+  it('con la ventana cerrada (hace 24 h y 1 min) el flujo sigue ganando y se marca windowClosed', () => {
+    const flow = buildFlow({ id: 'general' });
+    const message = buildMessage({
+      receivedAt: '2026-06-02T12:00:00.000Z',
+      lastUserMessageAt: '2026-06-01T11:59:00.000Z',
+    });
+
+    const result = decideFlow([flow], message, []);
+
+    expect(result.winner?.id).toBe('general');
+    expect(result.windowClosed).toBe(true);
   });
 });

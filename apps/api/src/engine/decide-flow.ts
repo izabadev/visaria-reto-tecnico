@@ -1,4 +1,5 @@
 import { evaluateEligibility } from './eligibility.js';
+import { isMessagingWindowClosed } from './messaging-window.js';
 import type {
   Decision,
   Eligibility,
@@ -83,6 +84,9 @@ export function decideFlow(
 
   return {
     winner: winner ? { id: winner.flow.id, name: winner.flow.name } : null,
+    // La ventana no descarta flujos: el ganador se mantiene y solo se avisa de que
+    // no se podría enviar texto libre. Se calcula aunque no haya ganador.
+    windowClosed: isMessagingWindowClosed(message),
     trace: evaluated.map((entry) => buildTraceEntry(entry, winner)),
   };
 }
