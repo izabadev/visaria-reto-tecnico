@@ -44,3 +44,21 @@ export type Eligibility =
   | { eligible: true; kind: 'keyword'; matchedKeyword: string }
   | { eligible: true; kind: 'catch_all' }
   | { eligible: false; reason: IneligibleReason };
+
+// Motivos de la fase de desempate (regla 6).
+export type WinnerReason = 'keyword_match_oldest' | 'catch_all_oldest';
+export type RankingLossReason = 'catch_all_loses_to_keyword' | 'older_flow_wins';
+
+export type TraceEntry = {
+  flowId: string;
+  flowName: string;
+  result: 'winner' | 'discarded';
+  reason: IneligibleReason | WinnerReason | RankingLossReason;
+  matchedKeyword?: string; // solo en el ganador por keyword
+  lostTo?: string; // id del ganador, solo si el flujo era candidato y perdió el desempate
+};
+
+export type Decision = {
+  winner: { id: string; name: string } | null;
+  trace: TraceEntry[]; // un elemento por flujo, en el mismo orden en que se recibieron
+};
